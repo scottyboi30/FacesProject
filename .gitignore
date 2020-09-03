@@ -1,0 +1,11 @@
+obj
+bin
+*.db
+*.rdb
+settings.json
+publish
+wwwroot
+.idea
+client/
+face*.jpg
+FacesAndFaces.sln.DotSettings.user
