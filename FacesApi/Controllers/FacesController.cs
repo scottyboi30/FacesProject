@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,23 +11,23 @@ namespace FacesApi.Controllers
     [ApiController]
     public class FacesController : ControllerBase
     {
+        // [HttpPost]
+        // public async Task<List<byte[]>> ReadFaces()
+        // {
+        //     await using var ms = new MemoryStream(2048);
+        //     await Request.Body.CopyToAsync(ms);
+        //     var faces = GetFaces(ms.ToArray());
+        //     return faces;
+        // }
+
         [HttpPost]
-        public async Task<List<byte[]>> ReadFaces()
+        public async Task<Tuple<List<byte[]>, Guid>> ReadFaces([FromQuery]Guid orderId)
         {
             await using var ms = new MemoryStream(2048);
             await Request.Body.CopyToAsync(ms);
             var faces = GetFaces(ms.ToArray());
-            return faces;
+            return new Tuple<List<byte[]>, Guid>(faces, orderId);
         }
-
-        //[HttpPost]
-        //public async Task<Tuple<List<byte[]>, Guid>> ReadFaces(Guid orderId)
-        //{
-        //    await using var ms = new MemoryStream(2048);
-        //    await Request.Body.CopyToAsync(ms);
-        //    var faces = GetFaces(ms.ToArray());
-        //    return new Tuple<List<byte[]>, Guid>(faces, orderId);
-        //}
 
         private static List<byte[]> GetFaces(byte[] image)
         {
