@@ -38,6 +38,7 @@ namespace Faces.OrderApi
                 c =>
                 {
                     c.AddConsumer<RegisterOrderCommandConsumer>();
+                    c.AddConsumer<OrderDispatchedEventConsumer>();
                 });
 
 
@@ -51,10 +52,29 @@ namespace Faces.OrderApi
                     e.Consumer<RegisterOrderCommandConsumer>(provider);
                 });
 
+                cfg.ReceiveEndpoint(RabbitMqMassTransitConstants.OrderDispatchedServiceQueue, e =>
+                {
+                    e.PrefetchCount = 16;
+                    e.UseMessageRetry(x => x.Interval(2, 100));
+                    e.Consumer<OrderDispatchedEventConsumer>(provider);
+                    //EndpointConvention.Map<OrderDispatchedEvent>(e.InputAddress);
+                });
+
                 //can add more endpoints. using the cfg.ReceiveEndpoint(.......
             }));
 
             services.AddSingleton<IHostedService, BusService>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .SetIsOriginAllowed((host) => true)
+                        .AllowCredentials());
+
+
+            });
             services.AddControllers();
         }
 
@@ -65,6 +85,8 @@ namespace Faces.OrderApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Faces.OrderApi.Models.Entities;
+using Messaging.InterfacesConstants.Events;
 using Newtonsoft.Json;
 
 namespace Faces.OrderApi.Messages.Consumers
@@ -20,7 +21,6 @@ namespace Faces.OrderApi.Messages.Consumers
         {
             _orderRepo = orderRepo;
             _clientFactory = clientFactory;
-
         }
 
         public async Task Consume(ConsumeContext<IRegisterOrderCommand> context)
@@ -34,6 +34,14 @@ namespace Faces.OrderApi.Messages.Consumers
                 var client = _clientFactory.CreateClient();
                 var (faces, orderId) = await GetFacesFromFaceApiAsync(client, result.ImageData, result.OrderId);
                 await SaveOrderDetails(orderId, faces);
+
+                await context.Publish<IOrderProcessedEvent>(new
+                {
+                    OrderId = orderId,
+                    result.UserEmail,
+                    Faces = faces,
+                    result.PictureUrl
+                });
             }
         }
 

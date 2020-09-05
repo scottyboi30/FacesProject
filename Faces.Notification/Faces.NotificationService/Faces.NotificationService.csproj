@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="appsettings.Production.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appsettings.Production.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="7.0.3" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.0.3" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0-preview.7.20364.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0-preview.7.20364.11" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Faces.SharedLib\Messaging.InterfacesConstants\Messaging.InterfacesConstants.csproj" />
+    <ProjectReference Include="..\Faces.EmailService\Faces.EmailService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
+</Project>

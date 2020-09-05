@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
@@ -15,12 +16,14 @@ namespace Faces.WebMvc.Models
         [Display(Name = "Image File")]
         public IFormFile File { get; set; }
 
-        [Display(Name = "Picture Url")]
+        [Display(Name = "PictureUrl")]
         public string PictureUrl { get; set; }
 
         [Display(Name = "Order Status")]
-        public string StatusString { get; set; }
+        public string Status { get; set; }
 
         public byte[] ImageData { get; set; }
+        public string ImageString { get; set; }
+        public List<OrderDetailViewModel> OrderDetails { get; set; }
     }
 }
