@@ -1,5 +1,6 @@
 using System;
 using Faces.OrderApi.Data;
+using Faces.OrderApi.Hubs;
 using Faces.OrderApi.Messages.Consumers;
 using Faces.OrderApi.Services;
 using GreenPipes;
@@ -32,6 +33,10 @@ namespace Faces.OrderApi
             ));
 
             services.AddHttpClient();
+
+            services.AddSignalR()
+                .AddJsonProtocol(options => { options.PayloadSerializerOptions.PropertyNamingPolicy = null; });
+            
             services.AddTransient<IOrderRepository, OrderRepository>();
 
             services.AddMassTransit(
@@ -95,6 +100,7 @@ namespace Faces.OrderApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<OrderHub>("/orderhub");
             });
         }
     }
